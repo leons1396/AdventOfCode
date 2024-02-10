@@ -1,8 +1,6 @@
-def wasteland(inputs):
-    pass
 
 
-with open("puzzle_inputs/wasteland_puzzle.txt") as f:
+with open("puzzle_inputs/debug_input.txt") as f:
     inputs = f.readlines()
     inputs = [line.replace("\n", "").strip().split(" = ") for line in inputs]
     print(inputs)
@@ -13,6 +11,7 @@ _ = inputs.pop(0)
 print(instructions[0][0], len(instructions[0]))
 current_node = None
 for node in inputs:
+    print(node[0][-1])
     if node[0] == 'AAA':
         current_node = node
         break
@@ -45,6 +44,7 @@ while True:
         print("Reach Final Node")
         break
 
+    # just to prevent infinite loop
     if steps == 100000:
         print("BREAK")
         break
