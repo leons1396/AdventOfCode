@@ -17,6 +17,9 @@ def init_move(start_pos, tile, len_line, direction):
             return start_pos - 1
     return None
 
+def shoelace(p1, p2):
+    return p1[0] * p2[1] - p1[1] * p2[0]
+
 
 with open('puzzle_inputs/puzzle_input.txt') as f:
     puzzle = f.read().splitlines()
@@ -197,5 +200,171 @@ for i in range(0, 4):
         # add to visited
         visited.append(cur_pos)
 
-print(len(visited))
+#print(len(visited))
 print("farthest = ", (len(visited) // 2) + 1)
+#print(tile_map)
+# https://www.reddit.com/r/adventofcode/comments/18f1sgh/2023_day_10_part_2_advise_on_part_2/ hint to use shoelace_formula and pick's_theorem
+
+directions = ['up', 'right', 'down', 'left']
+enclosed_counter = 0
+for pos, tile in tile_map.items():
+    if tile == '0':
+        continue
+    # only the . are from interest
+    if tile != '.':
+        continue
+    # check if '.' is at a border
+    # right border
+    if pos % len_line == 0:
+        tile_map[pos] = '0'
+        continue
+    #left border
+    if pos % len_line == 1:
+        tile_map[pos] = '0'
+        continue
+    # top border
+    if pos <= len_line:
+        tile_map[pos] = '0'
+        continue
+    # down border
+    if pos >= len(tile_map) - len_line:
+        tile_map[pos] = '0'
+        continue
+    not_enclosed = False
+    hit = 0
+    temp_pos = pos
+    # chech if any tile from visited is above the current pos of .
+    while True:
+        temp_pos = temp_pos - len_line
+        if temp_pos < 1:
+            # jumps out of the grid. this point is not enclosed by main loop
+            not_enclosed = True
+            tile_map[pos] = '0'
+            break
+
+        # if it hit any tile which was not in visited
+        if tile_map[temp_pos] != '.' and temp_pos not in visited:
+            tile_map[pos] = '0'
+            break
+
+        if temp_pos in visited:
+            hit += 1
+            break
+
+    # I dont have to check the other directions
+    if not_enclosed:
+        continue
+
+    temp_pos = pos
+    # check if any tile from visited is below the current pos of .
+    while True:
+        temp_pos = temp_pos + len_line
+        if temp_pos > len(tile_map):
+            not_enclosed = True
+            tile_map[pos] = '0'
+            break
+
+        # if it hit any tile which was not in visited
+        if tile_map[temp_pos] != '.' and temp_pos not in visited:
+            tile_map[pos] = '0'
+            break
+
+        if temp_pos in visited:
+            hit += 1
+            break
+    if not_enclosed:
+        continue
+
+    temp_pos = pos
+    # check if any tile from visited is left of the current pos of .
+    while True:
+        temp_pos = temp_pos - 1
+        if temp_pos % len_line == 1:
+            not_enclosed = True
+            tile_map[pos] = '0'
+            break
+        # if it hit any tile which was not in visited
+        if tile_map[temp_pos] != '.' and temp_pos not in visited:
+            tile_map[pos] = '0'
+            break
+
+        if temp_pos in visited:
+            hit += 1
+            break
+    if not_enclosed:
+        continue
+
+    temp_pos = pos
+    # chech if any tile from visited is right of the current pos of .
+    while True:
+        temp_pos = temp_pos + 1
+        if temp_pos % len_line == 0:
+            not_enclosed = True
+            tile_map[pos] = '0'
+            break
+
+        # if it hit any tile which was not in visited
+        if tile_map[temp_pos] != '.' and temp_pos not in visited:
+            tile_map[pos] = '0'
+            break
+
+        if temp_pos in visited:
+            hit += 1
+            break
+    if not_enclosed:
+        continue
+
+    if hit == 4:
+        enclosed_counter += 1
+
+print("enclosed_counter = ", enclosed_counter)
+print(tile_map)
+print("length: ", len(tile_map))
+
+print(visited)
+# insert starting position
+visited.insert(0, start_pos)
+
+# transform the index into a (x,y) grid map. Top left corner is (0,0). Positive direction of y axis is down
+grid = []
+for pos in visited:
+    # col = rest of division
+    # line = division
+    line, col = divmod(pos, len_line)
+    if col == 0:
+        grid.append((line, len_line))
+    else:
+        grid.append((line + 1, col))
+
+print("grid", grid)
+print("visited", visited)
+assert len(grid) == len(visited)
+print("length grid: ", len(grid))
+#assert grid[27] == (8, 160)
+
+#calculate the are of the polygon with shoelace formula
+area = 0
+for i, p in enumerate(grid, 1):
+    if i != len(grid):
+        area += shoelace(p, grid[i])
+    else:
+        area += shoelace(p, grid[0])
+
+area = area//2
+print("Area half: ", area)
+
+# calculate the number of integer points inside the polygon with pick's theorem
+# A = i + b/2 - 1, i=interior points, b=border points
+interior_points = abs(area) + 1 - (len(grid) // 2)
+print("interior_points: ", interior_points)
+
+
+"""
+file_path = 'puzzle_inputs/debug.txt'
+# write dictionary back into new text file
+with open(file_path, "w") as f:
+    for i in range(1, len(tile_map) + 1):
+        f.write(tile_map[i])
+        if i % len_line == 0:
+            f.write('\n')
+"""
