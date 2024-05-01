@@ -1,33 +1,34 @@
 def init_move(start_pos, tile, len_line, direction):
     # move up
-    if direction == 'up':
-        if tile in ['F', '7', '|']:
+    if direction == "up":
+        if tile in ["F", "7", "|"]:
             return start_pos - len_line
     # move right
-    if direction == 'right':
-        if tile in ['J', '7', '-']:
+    if direction == "right":
+        if tile in ["J", "7", "-"]:
             return start_pos + 1
     # move down
-    if direction == 'down':
-        if tile in ['L', 'J', '|']:
+    if direction == "down":
+        if tile in ["L", "J", "|"]:
             return start_pos + len_line
     # move left
-    if direction == 'left':
-        if tile in ['F', '-', 'L']:
+    if direction == "left":
+        if tile in ["F", "-", "L"]:
             return start_pos - 1
     return None
+
 
 def shoelace(p1, p2):
     return p1[0] * p2[1] - p1[1] * p2[0]
 
 
-with open('puzzle_inputs/puzzle_input.txt') as f:
+with open("puzzle_inputs/puzzle_input.txt") as f:
     puzzle = f.read().splitlines()
 
 len_line = len(puzzle[0])
 print("len_line", len_line)
 # create mapping of position and corresponding symbol
-tile_map = {idx: tile for idx, tile in enumerate(''.join(puzzle), 1)}
+tile_map = {idx: tile for idx, tile in enumerate("".join(puzzle), 1)}
 
 # find S in tile_map
 start_pos = None
@@ -49,12 +50,12 @@ for i in range(0, 4):
     if i == 0:
         # check if I can step to the right
         if start_pos % len_line != 0:
-            cur_pos = init_move(start_pos, tile_map[start_pos + 1], len_line, 'right')
+            cur_pos = init_move(start_pos, tile_map[start_pos + 1], len_line, "right")
             # check if the returned position is a valid position. it must be within the map and if the new pos is on
             # a border then it is a invalid move too.
             if isinstance(cur_pos, int):
                 visited.append(cur_pos)
-                prev_move.append('right')
+                prev_move.append("right")
             else:
                 # calc pos is invalid
                 continue
@@ -64,10 +65,10 @@ for i in range(0, 4):
     if i == 1:
         # check if I can step to the left
         if start_pos % len_line != 1:
-            cur_pos = init_move(start_pos, tile_map[start_pos - 1], len_line, 'left')
+            cur_pos = init_move(start_pos, tile_map[start_pos - 1], len_line, "left")
             if isinstance(cur_pos, int):
                 visited.append(cur_pos)
-                prev_move.append('left')
+                prev_move.append("left")
             else:
                 continue
         else:
@@ -76,10 +77,12 @@ for i in range(0, 4):
     if i == 2:
         # check if I can step down
         if start_pos < len(tile_map) - len_line:
-            cur_pos = init_move(start_pos, tile_map[start_pos + len_line], len_line, 'down')
+            cur_pos = init_move(
+                start_pos, tile_map[start_pos + len_line], len_line, "down"
+            )
             if isinstance(cur_pos, int):
                 visited.append(cur_pos)
-                prev_move.append('down')
+                prev_move.append("down")
             else:
                 continue
         else:
@@ -88,10 +91,12 @@ for i in range(0, 4):
     if i == 3:
         # check if I can step up
         if start_pos > len_line:
-            cur_pos = init_move(start_pos, tile_map[start_pos - len_line], len_line, 'up')
+            cur_pos = init_move(
+                start_pos, tile_map[start_pos - len_line], len_line, "up"
+            )
             if isinstance(cur_pos, int):
                 visited.append(cur_pos)
-                prev_move.append('up')
+                prev_move.append("up")
             else:
                 continue
         else:
@@ -101,70 +106,70 @@ for i in range(0, 4):
     while True:
         # get tile
         tile = tile_map[cur_pos]
-        if prev_move[-1] == 'left':
+        if prev_move[-1] == "left":
             # step down
-            if tile == 'F':
+            if tile == "F":
                 cur_pos = cur_pos + len_line
-                prev_move.append('down')
+                prev_move.append("down")
             # step left
-            elif tile == '-':
+            elif tile == "-":
                 cur_pos = cur_pos - 1
-                prev_move.append('left')
+                prev_move.append("left")
             # step up
-            elif tile == 'L':
+            elif tile == "L":
                 cur_pos = cur_pos - len_line
-                prev_move.append('up')
+                prev_move.append("up")
             else:
                 print("Start from beginning")
                 print("current pos when starting new: ", cur_pos)
                 break
-        elif prev_move[-1] == 'right':
+        elif prev_move[-1] == "right":
             # step up
-            if tile == 'J':
+            if tile == "J":
                 cur_pos = cur_pos - len_line
-                prev_move.append('up')
+                prev_move.append("up")
             # step down
-            elif tile == '7':
+            elif tile == "7":
                 cur_pos = cur_pos + len_line
-                prev_move.append('down')
+                prev_move.append("down")
             # step right
-            elif tile == '-':
+            elif tile == "-":
                 cur_pos = cur_pos + 1
-                prev_move.append('right')
+                prev_move.append("right")
             else:
                 print("Start from beginning")
                 print("current pos when starting new: ", cur_pos)
                 break
-        elif prev_move[-1] == 'up':
+        elif prev_move[-1] == "up":
             # step right
-            if tile == 'F':
+            if tile == "F":
                 cur_pos = cur_pos + 1
-                prev_move.append('right')
+                prev_move.append("right")
             # step up
-            elif tile == '|':
+            elif tile == "|":
                 cur_pos = cur_pos - len_line
-                prev_move.append('up')
+                prev_move.append("up")
             # step left
-            elif tile == '7':
+            elif tile == "7":
                 cur_pos = cur_pos - 1
-                prev_move.append('left')
+                prev_move.append("left")
             else:
                 print("Start from beginning")
                 print("current pos when starting new: ", cur_pos)
                 break
-        elif prev_move[-1] == 'down':
+        elif prev_move[-1] == "down":
             # step right
-            if tile == 'L':
+            if tile == "L":
                 cur_pos = cur_pos + 1
-                prev_move.append('right')
+                prev_move.append("right")
             # step down
-            elif tile == '|':
+            elif tile == "|":
                 cur_pos = cur_pos + len_line
-                prev_move.append('down')
+                prev_move.append("down")
             # step left
-            elif tile == 'J':
+            elif tile == "J":
                 cur_pos = cur_pos - 1
-                prev_move.append('left')
+                prev_move.append("left")
             else:
                 print("Start from beginning")
                 print("current pos when starting new: ", cur_pos)
@@ -182,11 +187,11 @@ for i in range(0, 4):
         # validate
         prev_pos = visited[-1]
         # if cur_pos is at left border and want to step left
-        if prev_pos % len_line == 1 and prev_move[-1] == 'left':
+        if prev_pos % len_line == 1 and prev_move[-1] == "left":
             print("left border")
             break
         # if cur pos is at right border and want to step right
-        if prev_pos % len_line == 0 and prev_move[-1] == 'right':
+        if prev_pos % len_line == 0 and prev_move[-1] == "right":
             print("right border")
             break
         # if cur pos is at top border and want to step up
@@ -200,35 +205,35 @@ for i in range(0, 4):
         # add to visited
         visited.append(cur_pos)
 
-#print(len(visited))
+# print(len(visited))
 print("farthest = ", (len(visited) // 2) + 1)
-#print(tile_map)
+# print(tile_map)
 # https://www.reddit.com/r/adventofcode/comments/18f1sgh/2023_day_10_part_2_advise_on_part_2/ hint to use shoelace_formula and pick's_theorem
 
-directions = ['up', 'right', 'down', 'left']
+directions = ["up", "right", "down", "left"]
 enclosed_counter = 0
 for pos, tile in tile_map.items():
-    if tile == '0':
+    if tile == "0":
         continue
     # only the . are from interest
-    if tile != '.':
+    if tile != ".":
         continue
     # check if '.' is at a border
     # right border
     if pos % len_line == 0:
-        tile_map[pos] = '0'
+        tile_map[pos] = "0"
         continue
-    #left border
+    # left border
     if pos % len_line == 1:
-        tile_map[pos] = '0'
+        tile_map[pos] = "0"
         continue
     # top border
     if pos <= len_line:
-        tile_map[pos] = '0'
+        tile_map[pos] = "0"
         continue
     # down border
     if pos >= len(tile_map) - len_line:
-        tile_map[pos] = '0'
+        tile_map[pos] = "0"
         continue
     not_enclosed = False
     hit = 0
@@ -239,12 +244,12 @@ for pos, tile in tile_map.items():
         if temp_pos < 1:
             # jumps out of the grid. this point is not enclosed by main loop
             not_enclosed = True
-            tile_map[pos] = '0'
+            tile_map[pos] = "0"
             break
 
         # if it hit any tile which was not in visited
-        if tile_map[temp_pos] != '.' and temp_pos not in visited:
-            tile_map[pos] = '0'
+        if tile_map[temp_pos] != "." and temp_pos not in visited:
+            tile_map[pos] = "0"
             break
 
         if temp_pos in visited:
@@ -261,12 +266,12 @@ for pos, tile in tile_map.items():
         temp_pos = temp_pos + len_line
         if temp_pos > len(tile_map):
             not_enclosed = True
-            tile_map[pos] = '0'
+            tile_map[pos] = "0"
             break
 
         # if it hit any tile which was not in visited
-        if tile_map[temp_pos] != '.' and temp_pos not in visited:
-            tile_map[pos] = '0'
+        if tile_map[temp_pos] != "." and temp_pos not in visited:
+            tile_map[pos] = "0"
             break
 
         if temp_pos in visited:
@@ -281,11 +286,11 @@ for pos, tile in tile_map.items():
         temp_pos = temp_pos - 1
         if temp_pos % len_line == 1:
             not_enclosed = True
-            tile_map[pos] = '0'
+            tile_map[pos] = "0"
             break
         # if it hit any tile which was not in visited
-        if tile_map[temp_pos] != '.' and temp_pos not in visited:
-            tile_map[pos] = '0'
+        if tile_map[temp_pos] != "." and temp_pos not in visited:
+            tile_map[pos] = "0"
             break
 
         if temp_pos in visited:
@@ -300,12 +305,12 @@ for pos, tile in tile_map.items():
         temp_pos = temp_pos + 1
         if temp_pos % len_line == 0:
             not_enclosed = True
-            tile_map[pos] = '0'
+            tile_map[pos] = "0"
             break
 
         # if it hit any tile which was not in visited
-        if tile_map[temp_pos] != '.' and temp_pos not in visited:
-            tile_map[pos] = '0'
+        if tile_map[temp_pos] != "." and temp_pos not in visited:
+            tile_map[pos] = "0"
             break
 
         if temp_pos in visited:
@@ -340,9 +345,9 @@ print("grid", grid)
 print("visited", visited)
 assert len(grid) == len(visited)
 print("length grid: ", len(grid))
-#assert grid[27] == (8, 160)
+# assert grid[27] == (8, 160)
 
-#calculate the are of the polygon with shoelace formula
+# calculate the are of the polygon with shoelace formula
 area = 0
 for i, p in enumerate(grid, 1):
     if i != len(grid):
@@ -350,7 +355,7 @@ for i, p in enumerate(grid, 1):
     else:
         area += shoelace(p, grid[0])
 
-area = area//2
+area = area // 2
 print("Area half: ", area)
 
 # calculate the number of integer points inside the polygon with pick's theorem
