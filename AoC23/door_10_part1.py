@@ -21,7 +21,7 @@ def shoelace(p1, p2):
     return p1[0] * p2[1] - p1[1] * p2[0]
 
 
-with open('../puzzle_inputs/puzzle_input.txt') as f:
+with open('puzzle_inputs/puzzle_input.txt') as f:
     puzzle = f.read().splitlines()
 
 len_line = len(puzzle[0])
