@@ -1,6 +1,6 @@
 # number of possilbe pairs: (n^2 - n) / 2
 
-with open('puzzle_inputs/puzzle_input.txt') as f:
+with open('../puzzle_inputs/puzzle_input.txt') as f:
     puzzle = f.read().splitlines()
 
 #print(puzzle)

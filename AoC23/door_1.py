@@ -35,9 +35,8 @@ def trebuchet(calib_doc):
     return sum(encoded)
 
 
-
 if __name__ == '__main__':
-    with open('calib_doc.txt') as f:
+    with open('../puzzle_inputs/puzzle_input.txt') as f:
         lines = f.readlines()
         lines = [code.replace("\n", "") for code in lines]
 

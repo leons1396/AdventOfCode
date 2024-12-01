@@ -6,7 +6,7 @@ for i in range(0, len(time)):
     t = time[i]
     best = distance[i]
     ways_to_beat = 0
-    for j, sec in enumerate(range(1, t)):
+    for sec in range(1, t):
         time_left = t - sec
         speed = sec
         x = speed * time_left

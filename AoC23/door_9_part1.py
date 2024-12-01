@@ -1,4 +1,4 @@
-with open('puzzle_inputs/puzzle_input.txt') as f:
+with open('../puzzle_inputs/puzzle_input.txt') as f:
     puzzle = f.read().splitlines()
     sequences = [list(map(int, line.split(" "))) for line in puzzle]
 

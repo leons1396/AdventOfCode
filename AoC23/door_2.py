@@ -39,7 +39,7 @@ def cube_game(puzzle_input, matching_cubes):
     return sum_game, power_sum
 
 if __name__ == '__main__':
-    with open('cube_game.txt') as f:
+    with open('puzzle_inputs/cube_game.txt') as f:
         lines = f.readlines()
         lines = [code.replace("\n", "").split(": ") for code in lines]
 
