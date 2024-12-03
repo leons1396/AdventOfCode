@@ -10,27 +10,17 @@ def part1(puzzle, sum):
     return sum
 
 def part2(puzzle):
-    muls = re.findall(r"mul\((\d+),(\d+)\)", puzzle)
     # find all do() matches
-    #dos = re.findall("do\(\)", puzzle)
     # Find all matches and their positions
     dos = [(match.start(), match.group()) for match in re.finditer("do\(\)", puzzle)]
     donts = [(match.start(), match.group()) for match in re.finditer("don't\(\)", puzzle)]
-    print("Donts:", donts)
-    print("Dos:", dos)
 
-    # find all matches of mul(X,Y) and their indexes in the string
-    #muls = [(mul, puzzle.index(f"mul({mul[0]},{mul[1]}")) for mul in muls]
-    #print(muls)    # merge do() and dont() and sort them by their starting char index in the string
-
-    print(dos + donts)
+    # sort by their starting char position
     merged = sorted(dos + donts, key=lambda x: x[0])
-    print(merged)
+
     # iterate over the indexes
     modified_puzzle = re.sub(r"(do\(\)|don't\(\))", r"\n", puzzle)
-    # save the new string in inputs2.txt
-    with open("../inputs2.txt", "w") as f:
-        f.write(modified_puzzle)
+
     # depending on the beginning I can/can't multiply each mul() in the current line
     multiply_first = True
     sum = 0
