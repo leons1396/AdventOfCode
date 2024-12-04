@@ -51,6 +51,33 @@ def part1(puzzle):
 
     return count
 
+def apply_mask(l1, l2, l3) -> bool:
+    word_left_diagonal = l1[0] + l2[1] + l3[2]
+    word_right_diagonal = l1[2] + l2[1] + l3[0]
+    if word_left_diagonal in ["SAM", "MAS"] and word_right_diagonal in ["SAM", "MAS"]:
+        return True
+    return False
+
+def part2(puzzle):
+    count = 0
+    # create a 3x3 mask
+    # iterate over lines
+    for end_line, start_line in enumerate(range(len(puzzle)), 3):
+        if end_line == len(puzzle)+1:
+            break
+        slice = puzzle[start_line:end_line]
+
+        # iterate over each character in one line
+        for end_c, start_c in enumerate(range(len(puzzle[0])), 3):
+            if end_c == len(puzzle[0])+1:
+                break
+            l1 = slice[0][start_c:end_c]
+            l2 = slice[1][start_c:end_c]
+            l3 = slice[2][start_c:end_c]
+            if apply_mask(l1, l2, l3):
+                count += 1
+    return count
+
 with open("../inputs.txt") as f:
     lines = f.read().splitlines()
     print(lines)
@@ -60,3 +87,4 @@ with open("../inputs.txt") as f:
 #print("Count: ", count)
 
 count = part2(lines)
+print(count)
