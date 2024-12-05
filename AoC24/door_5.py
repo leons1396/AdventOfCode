@@ -11,6 +11,28 @@ def check(rules: list, update_seq: list) -> bool:
     # every rule is passed
     return True
 
+def reorder(rules: list, update_seq: list) -> list:
+    break_counter = 0
+    stop = True
+    while stop:
+        for i, cur in enumerate(update_seq, 1):
+            if i == len(update_seq):
+                stop = False
+                break
+            subset_rules = list(filter(lambda x: x[0] == cur, rules))
+            # if empty than there is no rule -> swap
+            if len(subset_rules) == 0:
+                update_seq[i - 1], update_seq[i] = update_seq[i], update_seq[i - 1]
+                break
+            if (cur, update_seq[i]) not in subset_rules:
+                update_seq[i - 1], update_seq[i] = update_seq[i], update_seq[i - 1]
+                break
+        break_counter += 1
+        if break_counter == 5000:
+            print("Break counter reached")
+            break
+    return update_seq
+
 def part1(rules, updates):
     count = 0
     for update in updates:
@@ -18,8 +40,14 @@ def part1(rules, updates):
             count += update[((len(update) - 1) // 2)]
     return count
 
-def part2(puzzle):
-    pass
+def part2(rules, updates):
+    count = 0
+    for update in updates:
+        # only focus on the incorrect ones
+        if not check(rules, update_seq=update):
+            new_update = reorder(rules, update)
+            count += new_update[((len(new_update) - 1) // 2)]
+    return count
 
 with open("../inputs.txt") as f:
     lines = f.read().split("\n\n")
@@ -40,4 +68,5 @@ for update in updates:
 #print(updates)
 
 count = part1(rules, updates)
+count = part2(rules, updates)
 print(count)
