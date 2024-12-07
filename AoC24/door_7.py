@@ -6,7 +6,7 @@ def part1(ergs, values):
         #print(vals)
         print(erg)
         num_ops = len(vals) - 1
-        for op in itertools.product(["+", "*", "||"], repeat=num_ops):
+        for op in itertools.product(["+", "*"], repeat=num_ops):
             s = 0
             for i in range(len(vals)):
                 if i + 1 == len(vals):
@@ -21,8 +21,33 @@ def part1(ergs, values):
                 break
     return count
 
-def part2(puzzle):
-    pass
+def part2(ergs, values):
+    count = 0
+    for erg, vals in zip(ergs, values):
+        #print(vals)
+        print(erg)
+        num_ops = len(vals) - 1
+        for op in itertools.product(["+", "*", "||"], repeat=num_ops):
+            s = 0
+            for i in range(len(vals)):
+                if i + 1 == len(vals):
+                    continue
+                o = op[i]
+                if o != "||":
+                    if i == 0:
+                        s += int(eval(str(vals[i]) + o + str(vals[i + 1])))
+                    else:
+                        s = int(eval(str(s) + o + str(vals[i + 1])))
+                elif o == "||":
+                    if i == 0:
+                        s = int(str(vals[i]) + str(vals[i + 1]))
+                    else:
+                        s = int(str(s) + str(vals[i + 1]))
+
+            if erg == s:
+                count += s
+                break
+    return count
 
 with open("../inputs.txt") as f:
     puzzle = f.read().splitlines()
@@ -37,4 +62,5 @@ with open("../inputs.txt") as f:
             _values.append(int(val))
         values.append(_values)
 #print(values)
-print("Part 1: ", part1(erg, values))
+#print("Part 1: ", part1(erg, values))
+print("Part 2: ", part2(erg, values))
