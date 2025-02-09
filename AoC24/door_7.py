@@ -27,6 +27,7 @@ def part2(ergs, values):
         #print(vals)
         print(erg)
         num_ops = len(vals) - 1
+
         for op in itertools.product(["+", "*", "||"], repeat=num_ops):
             s = 0
             for i in range(len(vals)):

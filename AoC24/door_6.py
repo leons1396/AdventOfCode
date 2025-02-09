@@ -76,6 +76,12 @@ def part1(puzzle):
             return "BREAK COUNTER REACHED"
 
 def part2(puzzle):
+    # as soon the guard reach a position twice it could be a loop then, is valid for the very first loop
+    # Verfolge den guard einfach solange, bis er einmal eine loop läuft, wenn das geschehen, muss einfach ein
+    # Hinderniss in die Laufrichtung platziert werden
+    # Die Position des Hinderniss bildet dann die Startposition/Endposition für die nächste loop
+    # das findet zumindest einen Teil der Hindernisse. Jedohc gibt es mehrere Optionen
+    # die Optionen ergeben sich aus den Punkten der '#' nur dort sind Richtungswechsel möglich und somit loops
     return count
 
 with open('../inputs.txt', 'r') as f:
